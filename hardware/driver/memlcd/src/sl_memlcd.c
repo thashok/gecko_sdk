@@ -169,7 +169,8 @@ sl_status_t sl_memlcd_clear(const struct sl_memlcd_t *device)
   uint16_t cmd;
 
   /* Set SCS */
-  GPIO_PinOutSet(SL_MEMLCD_SPI_CS_PORT, SL_MEMLCD_SPI_CS_PIN);
+  //GPIO_PinOutSet(SL_MEMLCD_SPI_CS_PORT, SL_MEMLCD_SPI_CS_PIN);
+  GPIO_PinOutClear(SL_MEMLCD_SPI_CS_PORT, SL_MEMLCD_SPI_CS_PIN);
 
   /* SCS setup time */
   sl_udelay_wait(device->setup_us);
@@ -183,7 +184,8 @@ sl_status_t sl_memlcd_clear(const struct sl_memlcd_t *device)
   sl_udelay_wait(device->hold_us);
 
   /* Clear SCS */
-  GPIO_PinOutClear(SL_MEMLCD_SPI_CS_PORT, SL_MEMLCD_SPI_CS_PIN);
+ // GPIO_PinOutClear(SL_MEMLCD_SPI_CS_PORT, SL_MEMLCD_SPI_CS_PIN);
+  GPIO_PinOutSet(SL_MEMLCD_SPI_CS_PORT, SL_MEMLCD_SPI_CS_PIN);
 
   return SL_STATUS_OK;
 }
@@ -202,7 +204,8 @@ sl_status_t sl_memlcd_draw(const struct sl_memlcd_t *device, const void *data, u
   row_start++;
 
   /* Assert SCS */
-  GPIO_PinOutSet(SL_MEMLCD_SPI_CS_PORT, SL_MEMLCD_SPI_CS_PIN);
+ // GPIO_PinOutSet(SL_MEMLCD_SPI_CS_PORT, SL_MEMLCD_SPI_CS_PIN);
+  GPIO_PinOutClear(SL_MEMLCD_SPI_CS_PORT, SL_MEMLCD_SPI_CS_PIN);
 
   /* SCS setup time */
   sl_udelay_wait(device->setup_us);
@@ -252,7 +255,8 @@ sl_status_t sl_memlcd_draw(const struct sl_memlcd_t *device, const void *data, u
   sl_udelay_wait(device->hold_us);
 
   /* De-assert SCS */
-  GPIO_PinOutClear(SL_MEMLCD_SPI_CS_PORT, SL_MEMLCD_SPI_CS_PIN);
+  //GPIO_PinOutClear(SL_MEMLCD_SPI_CS_PORT, SL_MEMLCD_SPI_CS_PIN);
+  GPIO_PinOutSet(SL_MEMLCD_SPI_CS_PORT, SL_MEMLCD_SPI_CS_PIN);
 
   /* Clean up garbage RX data */
   /* This is important when paired with others slaves */

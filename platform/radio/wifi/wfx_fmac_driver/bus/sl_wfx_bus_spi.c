@@ -17,6 +17,8 @@
 #include "sl_wfx_bus.h"
 #include "sl_wfx_host_api.h"
 #include "sl_wfx_registers.h"
+#include "em_gpio.h"
+#include "sl_spidrv_exp_config.h"
 
 #define SET_WRITE 0x7FFF /* usage: and operation */
 #define SET_READ 0x8000  /* usage: or operation */
@@ -28,9 +30,11 @@ sl_status_t sl_wfx_reg_read(sl_wfx_register_address_t address, void *buffer, uin
   uint8_t header_as_bytes[2];
   sl_wfx_pack_16bit_big_endian(header_as_bytes, header);
 
-  sl_wfx_host_spi_cs_assert();
+  //sl_wfx_host_spi_cs_assert();
+  GPIO_PinOutClear(SL_SPIDRV_EXP_CS_PORT, SL_SPIDRV_EXP_CS_PIN);
   sl_wfx_host_spi_transfer_no_cs_assert(SL_WFX_BUS_READ, header_as_bytes, 2, (uint8_t *)buffer, length);
-  sl_wfx_host_spi_cs_deassert();
+  GPIO_PinOutSet(SL_SPIDRV_EXP_CS_PORT, SL_SPIDRV_EXP_CS_PIN);
+  //sl_wfx_host_spi_cs_deassert();
 
   if (address == SL_WFX_CONFIG_REG_ID) {
     // Config always read/written in "word mode 0"
@@ -72,10 +76,12 @@ sl_status_t sl_wfx_reg_write(sl_wfx_register_address_t address, const void *buff
   uint8_t header_as_bytes[2];
   sl_wfx_pack_16bit_big_endian(header_as_bytes, header);
 
-  sl_wfx_host_spi_cs_assert();
+  //sl_wfx_host_spi_cs_assert();
+  GPIO_PinOutClear(SL_SPIDRV_EXP_CS_PORT, SL_SPIDRV_EXP_CS_PIN);
   /* Note: sl_wfx_host_spi_transfer_no_cs_assert() does not modify the buffer when doing SL_WFX_BUS_WRITE */
   sl_wfx_host_spi_transfer_no_cs_assert(SL_WFX_BUS_WRITE, header_as_bytes, 2, (uint8_t *)buffer, length);
-  sl_wfx_host_spi_cs_deassert();
+  GPIO_PinOutSet(SL_SPIDRV_EXP_CS_PORT, SL_SPIDRV_EXP_CS_PIN);
+  //sl_wfx_host_spi_cs_deassert();
 
   return SL_STATUS_OK;
 }
